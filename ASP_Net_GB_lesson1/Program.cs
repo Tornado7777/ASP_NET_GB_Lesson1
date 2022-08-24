@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -31,13 +32,15 @@ namespace ASP_Net_GB_lesson1
             for (int i = 0; i < postsString.Length; i++)
             {
                 postsString[i] = requestsHttp[i].ToString();
+
             }
 
             //десериализация в массив
             var posts = new List<Post>();
             for (int i = 0; i < 10; i++)
             {
-                posts[i] = await JsonSerializer.DeserializeAsync<Post>(postsString[i]);
+               // posts[i] = await System.Text.Json.JsonSerializer.DeserializeAsync<Post>(postsString[i]);
+                posts[i] = JsonConvert.DeserializeObject<Post>(postsString[i]);
             }
 
             //сохранение в файл
@@ -45,7 +48,7 @@ namespace ASP_Net_GB_lesson1
             {
                 using (FileStream fs = new FileStream("posts.json", FileMode.OpenOrCreate))
                 {
-                    await JsonSerializer.SerializeAsync<Post>(fs,posts[i]);
+                    await System.Text.Json.JsonSerializer.SerializeAsync<Post>(fs,posts[i]);
                 }
             }
         }
