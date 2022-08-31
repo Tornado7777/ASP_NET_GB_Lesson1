@@ -23,8 +23,8 @@ namespace EmployeeService.Controllers
             _logger = logger;
         }
 
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] CreateDictionaryRequest request)
+        [HttpPost("employee-types/create")]
+        public ActionResult<int> Create([FromBody] CreateDictionaryRequest request)
         {
             _logger.LogInformation($"Create employee type.");
 
@@ -39,14 +39,15 @@ namespace EmployeeService.Controllers
             public ActionResult<List<EmployeeTypeDto>> GetAllEmployeeTypes()
         {
                 _logger.LogInformation($"Employeee GetAllEmployeeTypes.");
-                return Ok(_employeeTypeRepository.GetAll().Select(employee => new EmployeeTypeDto
+                return Ok(_employeeTypeRepository.GetAll().Select(employeeType => new EmployeeTypeDto
                 {
-                    Description = employee.Description,
+                    Id = employeeType.Id,
+                    Description = employeeType.Description,
                 }
                 ).ToList());
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("employee-types/get/{id}")]
         public ActionResult<EmployeeTypeDto> GetById([FromRoute] int id)
         {
             _logger.LogInformation($"Employee type GetById({id}).");
@@ -58,15 +59,19 @@ namespace EmployeeService.Controllers
             });
         }
 
-        [HttpGet("update")]
-        public ActionResult<EmployeeTypeDto> Update([FromBody] EmployeeType employeeType)
+        [HttpPost ("employee-types/update")]
+        public ActionResult<EmployeeTypeDto> Update([FromBody] EmployeeTypeDto employeeTypeDto)
         {
-            _logger.LogInformation($"Employee type Update({employeeType.Id}).");
-            _employeeTypeRepository.Update(employeeType);
+            _logger.LogInformation($"Employee type Update({employeeTypeDto.Id}).");
+            _employeeTypeRepository.Update(new EmployeeType
+            {
+                Id = employeeTypeDto.Id,
+                Description=employeeTypeDto.Description
+            });
             return Ok();
         }
 
-        [HttpGet("delete/{id}")]
+        [HttpDelete ("employee-types/delete/{id}")]
         public ActionResult<EmployeeTypeDto> Delete([FromRoute] int id)
         {
             _logger.LogInformation($"Employee type Delete({id}).");

@@ -40,15 +40,14 @@ namespace EmployeeService.Controllers
         #region Public Methods
 
         [HttpPost("create")]
-        public IActionResult Create([FromBody] CreateDepartmentRequest request)
+        public ActionResult<int> Create([FromBody] CreateDepartmentRequest request)
         {
             _logger.LogInformation($"Create department.");
             return Ok(_departmentRepository.Create(new Department
             {
-                description = request.Description
+                Description = request.Description 
             }
-            ));
-        }
+            ));        }
 
         [HttpGet("all")]
         public ActionResult<List<DepartmentDto>> GetAllDepartments()
@@ -58,7 +57,7 @@ namespace EmployeeService.Controllers
             return Ok(_departmentRepository.GetAll().Select(department => new DepartmentDto
             {
                 Id = department.Id,
-                Description = department.description
+                Description = department.Description
             }).ToList());
         }
 
@@ -70,19 +69,23 @@ namespace EmployeeService.Controllers
             return Ok(new DepartmentDto
             {
                 Id = department.Id,
-                Description = department.description
+                Description = department.Description
             });
         }
 
-        [HttpGet("update")]
-        public ActionResult<DepartmentDto> Update([FromBody] Department department)
+        [HttpPost ("update")]
+        public ActionResult<DepartmentDto> Update([FromBody] DepartmentDto departmentDto)
         {
-            _logger.LogInformation($"Department Update({department.Id}).");
-            _departmentRepository.Update(department);
+            _logger.LogInformation($"Department Update({departmentDto.Id}).");
+            _departmentRepository.Update(new Department
+            {
+                Id=departmentDto.Id,
+                Description=departmentDto.Description
+            });
             return Ok();
         }
 
-        [HttpGet("delete/{id}")]
+        [HttpDelete ("delete/{id}")]
         public ActionResult<DepartmentDto> Delete([FromRoute] int id)
         {
             _logger.LogInformation($"Department Delete({id}).");
