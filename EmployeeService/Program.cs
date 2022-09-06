@@ -58,6 +58,11 @@ namespace EmployeeService
 
             #endregion
 
+            #region Services
+
+            builder.Services.AddSingleton<IAuthenticateService, AuthenticateService>();
+
+
             // Add services to the container.
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
@@ -67,6 +72,8 @@ namespace EmployeeService
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            #endregion
 
             var app = builder.Build();
 
