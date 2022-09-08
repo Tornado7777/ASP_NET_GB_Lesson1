@@ -3,12 +3,14 @@ using EmployeeService.Models;
 using EmployeeService.Models.Requests;
 using EmployeeService.Services;
 using EmployeeService.Services.Impl;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 
 namespace EmployeeService.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
@@ -30,7 +32,7 @@ namespace EmployeeService.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Create([FromBody] CreateEmployeeRequest request)
+        public ActionResult<int> Create([FromBody] CreateEmployeeRequest request)
         {
             _logger.LogInformation($"Create employee.");
 
@@ -78,15 +80,24 @@ namespace EmployeeService.Controllers
             });
         }
 
-        [HttpGet("update")]
-        public ActionResult<EmployeeDto> Update([FromBody] Employee employee)
+        [HttpPost("update")]
+        public ActionResult<EmployeeDto> Update([FromBody] EmployeeDto employeeDto)
         {
-            _logger.LogInformation($"Employee Update({employee.Id}).");
-            _employeeRepository.Update(employee);
+            _logger.LogInformation($"Employee Update({employeeDto.Id}).");
+            _employeeRepository.Update(new Employee 
+            { 
+                Id = employeeDto.Id,
+                EmployeeTypeId = employeeDto.EmployeeTypeId,
+                FirstName = employeeDto.FirstName,
+                Surname = employeeDto.Surname,
+                Patronymic = employeeDto.Patronymic,
+                Salary = employeeDto.Salary,
+                DepartmentId = employeeDto.DepartmentId,
+            });
             return Ok();
         }
 
-        [HttpGet("delete/{id}")]
+        [HttpDelete ("delete/{id}")]
         public ActionResult<EmployeeDto> Delete([FromRoute] int id)
         {
             _logger.LogInformation($"Employee Delete({id}).");
