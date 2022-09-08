@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
+using System.Net;
 using System.Text;
 
 namespace EmployeeService
@@ -26,6 +27,16 @@ namespace EmployeeService
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.Listen(IPAddress.Any, 5001, listenOptions =>
+                {
+                    listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
+                    listenOptions.UseHttps(@"D:\Users\repository\testLocalCert.pfx", "12345");
+                
+                });
+            });
+
             #region Configure Options
 
             builder.Services.Configure<LoggerOptions>(options =>
@@ -33,6 +44,11 @@ namespace EmployeeService
                 builder.Configuration.GetSection("Settings:DatabaseOptions:ConnectionString").Bind(options);
             });
 
+            #endregion
+
+            #region Configure gRPC
+
+            builder.Services.AddGrpc();
             #endregion
 
             #region Configure EF DBContext Service (EmployeeServiceDB Database)
@@ -157,9 +173,21 @@ namespace EmployeeService
             app.UseAuthentication();
 
             app.UseAuthorization();
-            app.UseHttpLogging();
+            app.UseWhen(// в dot net 6 http logging не работает с логированием grpc
+                ctx => ctx.Request.ContentType != "application/grpc",
+                builder =>
+                {
+                    builder.UseHttpLogging();
+                });
+      
 
             app.MapControllers();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGrpcService<DictionariesService>();
+                endpoints.MapGrpcService<DepartmentService>();
+            });
 
             app.Run();
         }
