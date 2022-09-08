@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+option csharp_namespace = "DepartmentServiceProto";
+
+package DepartmentServiceProto;
+
+service DepartmentService{
+
+	rpc CreateDepartment (CreateDepartmentRequest) returns (CreateDepartmentResponse);
+	rpc GetAllDepartments (GetAllDepartmentsRequest) returns (GetAllDepartmentsResponse);
+	rpc GetByIdDepartment (GetByIdDepartmentRequest) returns (GetByIdDepartmentResponse);
+	rpc UpdateDepartment (UpdateDepartmentRequest) returns (UpdateDepartmentResponse);
+	rpc DeleteDepartment (DeleteDepartmentRequest) returns (DeleteDepartmentResponse);
+
+}
+
+message CreateDepartmentRequest{
+	string description = 1;
+}
+
+message CreateDepartmentResponse{
+	int32 id = 1;
+}
+
+message GetAllDepartmentsRequest{
+
+}
+
+message GetAllDepartmentsResponse{
+	repeated Department Departments = 1;
+}
+
+
+
+
+
+message Department{
+	int32 id = 1;
+	string description = 2;
+}
+
+message GetByIdDepartmentRequest{
+	int32 id = 1;
+}
+
+message GetByIdDepartmentResponse{
+	int32 id =1;
+	string description = 2;
+}
+
+message UpdateDepartmentRequest{
+	int32 id =1;
+	string description = 2;
+}
+
+message UpdateDepartmentResponse{
+
+}
+
+
+message DeleteDepartmentRequest{
+	int32 id = 1;
+};
+
+message DeleteDepartmentResponse{
+	
+};

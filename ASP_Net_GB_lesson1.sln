@@ -5,9 +5,11 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP_Net_GB_lesson1", "ASP_Net_GB_lesson1\ASP_Net_GB_lesson1.csproj", "{9464A976-FDBA-461A-8957-1B581A8A8A1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeService", "EmployeeService\EmployeeService.csproj", "{ECDD3A9C-EFEC-409C-AAEA-5BD37E3A8EFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeService", "EmployeeService\EmployeeService.csproj", "{ECDD3A9C-EFEC-409C-AAEA-5BD37E3A8EFA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeService.Data", "EmployeeService.Data\EmployeeService.Data.csproj", "{D0DDA04B-C5A1-44F7-B08E-121716CABB3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeClient", "EmployeeClient\EmployeeClient.csproj", "{E51D25C4-C22A-42F0-BE79-40B40912CE8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{D0DDA04B-C5A1-44F7-B08E-121716CABB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0DDA04B-C5A1-44F7-B08E-121716CABB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0DDA04B-C5A1-44F7-B08E-121716CABB3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E51D25C4-C22A-42F0-BE79-40B40912CE8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E51D25C4-C22A-42F0-BE79-40B40912CE8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E51D25C4-C22A-42F0-BE79-40B40912CE8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E51D25C4-C22A-42F0-BE79-40B40912CE8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
