@@ -51,8 +51,13 @@ namespace EmployeeService.Services.Impl
         {
             if (data == null) throw new ArgumentNullException("data is null");
             Department department = GetById(data.Id);
-            department.Description = data.Description;
-            _context.SaveChanges();
+
+            if(department != null)
+            {
+                department.Description = data.Description;
+                _context.SaveChanges();
+            }
+            
         }
     }
 }

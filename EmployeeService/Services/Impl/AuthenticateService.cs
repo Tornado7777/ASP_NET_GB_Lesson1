@@ -29,7 +29,37 @@ namespace EmployeeService.Services.Impl
 
         public SessionDto GetSession(string sessionToken)
         {
-            throw new NotImplementedException();
+            SessionDto sessionDto;
+
+            lock (_sessions)
+            {
+               _sessions.TryGetValue(sessionToken, out sessionDto);
+            }
+
+            if (sessionDto == null)
+            {
+                using IServiceScope scope = _serviceScopeFactory.CreateScope();
+                EmployeeServiceDbContext context = scope.ServiceProvider.GetRequiredService<EmployeeServiceDbContext>();
+
+                AccountSession session = context
+                    .AccountSessions
+                    .FirstOrDefault(item => item.SessionToken == sessionToken);
+                if (sessionDto == null)
+                    return null;
+
+                Account account = context.Accounts.FirstOrDefault(item => item.AccountId == session.AccountId);
+
+                sessionDto = GetSessionDto(account, session);
+                if(sessionDto != null)
+                {
+                    lock (_sessions)
+                    {
+                        _sessions[sessionToken] = sessionDto;
+                    }
+                }
+            }
+
+            return sessionDto;
         }
 
 
