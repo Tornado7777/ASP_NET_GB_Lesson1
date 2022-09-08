@@ -2,14 +2,19 @@
 using EmployeeService.Models;
 using EmployeeService.Models.Options;
 using EmployeeService.Models.Requests;
+using EmployeeService.Models.Validators;
 using EmployeeService.Services;
 using EmployeeService.Services.Impl;
+using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace EmployeeService.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
@@ -20,6 +25,7 @@ namespace EmployeeService.Controllers
         private readonly ILogger<DepartmentController> _logger;
         private readonly IOptions<LoggerOptions> _loggerOptions;
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IValidator<DepartmentDto> _departmentDtoVailadtor;
 
         #endregion
 
@@ -28,11 +34,13 @@ namespace EmployeeService.Controllers
         public DepartmentController(
             ILogger<DepartmentController> logger,
             IOptions<LoggerOptions> loggerOptions,
-            IDepartmentRepository departmentRepository)
+            IDepartmentRepository departmentRepository,
+            IValidator<DepartmentDto> departmentDtoVailadtor)
         {
             _departmentRepository = departmentRepository;
             _loggerOptions = loggerOptions;
             _logger = logger;
+            _departmentDtoVailadtor = departmentDtoVailadtor;
         }
 
         #endregion
@@ -74,8 +82,15 @@ namespace EmployeeService.Controllers
         }
 
         [HttpPost ("update")]
+        [ProducesResponseType(typeof(IDictionary<string, string[]>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(DepartmentDto), StatusCodes.Status200OK)]
         public ActionResult<DepartmentDto> Update([FromBody] DepartmentDto departmentDto)
         {
+            ValidationResult validationResult = _departmentDtoVailadtor.Validate(departmentDto);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.ToDictionary());
+
             _logger.LogInformation($"Department Update({departmentDto.Id}).");
             _departmentRepository.Update(new Department
             {
